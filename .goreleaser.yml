@@ -11,6 +11,8 @@ builds:
       - x86_64-unknown-linux-gnu
       - aarch64-unknown-linux-gnu
       - powerpc64le-unknown-linux-gnu
+      - x86_64-apple-darwin
+      - aarch64-apple-darwin
     tool: 'cross'
     command: build
 
@@ -20,6 +22,8 @@ brews:
       name: homebrew-formulas
       token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
     directory: Formula
+    dependencies:
+      - git
     name: gitpower
     homepage: 'https://github.com/PunGrumpy/gitpower'
     description: 'GitPower CLI tool'
