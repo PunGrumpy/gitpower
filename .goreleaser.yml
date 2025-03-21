@@ -19,6 +19,7 @@ brews:
       owner: PunGrumpy
       name: homebrew-formulas
       token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+    directory: Formula
     commit_author:
       name: PunGrumpy
       email: 108584943+PunGrumpy@users.noreply.github.com
