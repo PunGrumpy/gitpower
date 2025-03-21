@@ -1,0 +1,62 @@
+version: 2
+project_name: gitpower
+before:
+  hooks:
+    - rustup default stable
+    - cargo install cross --git https://github.com/cross-rs/cross
+
+builds:
+  - builder: rust
+    targets:
+      - x86_64-unknown-linux-gnu
+      - aarch64-unknown-linux-gnu
+      - powerpc64le-unknown-linux-gnu
+    tool: 'cross'
+    command: build
+
+brews:
+  - repository:
+      owner: PunGrumpy
+      name: homebrew-formulas
+      token: '{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}'
+    commit_author:
+      name: PunGrumpy
+      email: 108584943+PunGrumpy@users.noreply.github.com
+    name: gitpower
+    homepage: 'https://github.com/PunGrumpy/gitpower'
+    description: 'GitPower CLI tool'
+    license: 'MIT'
+    install: |
+      bin.install "gitpower"
+    test: |
+      system "#{bin}/gitpower --version"
+
+archives:
+  - formats:
+      - tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "arm64" }}aarch64
+      {{- else if eq .Arch "aarch64" }}aarch64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  version_template: '{{ incpatch .Version }}-next'
+release:
+  prerelease: auto
+  footer: |
+    ## Thanks for using GitPower!
+
+    That's all the changes for {{ .Tag }}. If you have any questions, please don't hesitate to ask.
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^test'
+      - '^ci'

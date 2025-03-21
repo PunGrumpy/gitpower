@@ -1,0 +1,26 @@
+name: 🕵🏻 Lint Workflow
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout Code
+        uses: actions/checkout@v4
+      - name: 📦 Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: 🎨 Check Formatting
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --check
+      - name: 🕵🏻 Lint Code
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
