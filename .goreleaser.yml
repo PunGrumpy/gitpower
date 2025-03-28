@@ -53,6 +53,7 @@ checksum:
 snapshot:
   version_template: '{{ incpatch .Version }}-next'
 release:
+  mode: keep-existing
   prerelease: auto
   footer: |
     ## Thanks for using GitPower!
