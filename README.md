@@ -12,6 +12,12 @@ A powerful CLI tool for managing multiple Git repositories simultaneously, devel
 - **Group repositories** for easier management 📁
 - **Configure via YAML** for simple setup ⚙️
 
+## 🎯 To-Do
+
+- [ ] Initialize new repositories
+- [ ] Completion for shell
+- [ ] Interactive mode (like LazyGit)
+
 ## 📦 Installation
 
 ### From Source Code
@@ -30,6 +36,7 @@ A powerful CLI tool for managing multiple Git repositories simultaneously, devel
    ```
 
 3. Move the binary to your PATH:
+
    ```
    sudo mv target/release/gitpower /usr/local/bin/
    ```
