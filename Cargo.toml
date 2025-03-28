@@ -1,6 +1,6 @@
 [package]
 name = "gitpower"
-version = "0.1.0"
+version = "1.0.2"
 edition = "2024"
 description = "A powerful CLI tool for managing multiple Git repositories"
 license = "MIT"
