@@ -2,7 +2,7 @@ use clap::{Arg, Command};
 
 pub fn build_cli() -> Command {
     Command::new("GitPower")
-        .version("1.0")
+        .version("1.0.2")
         .author("PunGrumpy")
         .about("Manage multiple Git repositories effortlessly")
         .arg(
