@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/PunGrumpy/gitpower/compare/v1.3.1...v1.3.2) (2025-03-29)
+
+
+### Bug Fixes
+
+* **ci:** streamline release process by separating release job into its own workflow ([4404628](https://github.com/PunGrumpy/gitpower/commit/44046288e5739f085a1fddb3de4f0eb89bb66090))
+
 ## [1.3.1](https://github.com/PunGrumpy/gitpower/compare/v1.3.0...v1.3.1) (2025-03-29)
 
 
