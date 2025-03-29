@@ -4,9 +4,9 @@ mod config;
 mod git;
 
 use colored::Colorize;
+use config::Repository;
 use std::fs;
 use std::path::Path;
-use config::Repository;
 
 fn main() {
     let cli = cli::build_cli();
@@ -71,7 +71,7 @@ fn main() {
                 // Validate repository path
                 let expanded_path = shellexpand::tilde(path);
                 let repo_path = Path::new(expanded_path.as_ref());
-                
+
                 if !repo_path.exists() {
                     if let Err(e) = fs::create_dir_all(repo_path) {
                         eprintln!(

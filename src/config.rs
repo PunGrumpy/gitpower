@@ -25,7 +25,10 @@ pub struct Repository {
 impl Repository {
     pub fn validate(&self) -> Result<(), String> {
         if let Some(remote) = &self.remote {
-            if !remote.starts_with("http://") && !remote.starts_with("https://") && !remote.starts_with("git@") {
+            if !remote.starts_with("http://")
+                && !remote.starts_with("https://")
+                && !remote.starts_with("git@")
+            {
                 return Err(format!("Invalid remote URL format: {}", remote));
             }
         }
@@ -50,15 +53,19 @@ pub fn load_config(config_path: &str) -> Result<Config, Box<dyn Error>> {
             }
         },
         Err(e) => {
-            eprintln!("{}: {}", "Config file not found, creating default config".yellow(), e);
+            eprintln!(
+                "{}: {}",
+                "Config file not found, creating default config".yellow(),
+                e
+            );
             create_default_config(config_path);
             // Try to load the newly created config
             match fs::read_to_string(config_path) {
                 Ok(content) => match serde_yaml::from_str::<Config>(&content) {
                     Ok(config) => Ok(config),
-                    Err(e) => Err(Box::new(e))
+                    Err(e) => Err(Box::new(e)),
                 },
-                Err(e) => Err(Box::new(e))
+                Err(e) => Err(Box::new(e)),
             }
         }
     }
@@ -129,8 +136,12 @@ pub fn get_repositories_by_names<'a>(config: &'a Config, names: &[&str]) -> Vec<
                         result.push(repo);
                     }
                 } else {
-                    eprintln!("{}: Repository '{}' in group '{}' not found", 
-                        "Warning".yellow(), repo_name, name);
+                    eprintln!(
+                        "{}: Repository '{}' in group '{}' not found",
+                        "Warning".yellow(),
+                        repo_name,
+                        name
+                    );
                 }
             }
         } else {
@@ -140,15 +151,20 @@ pub fn get_repositories_by_names<'a>(config: &'a Config, names: &[&str]) -> Vec<
                     result.push(repo);
                 }
             } else {
-                eprintln!("{}: Repository or group '{}' not found", 
-                    "Warning".yellow(), name);
+                eprintln!(
+                    "{}: Repository or group '{}' not found",
+                    "Warning".yellow(),
+                    name
+                );
             }
         }
     }
 
     if result.is_empty() {
-        eprintln!("{}: No valid repositories found for the specified names", 
-            "Warning".yellow());
+        eprintln!(
+            "{}: No valid repositories found for the specified names",
+            "Warning".yellow()
+        );
     }
 
     result
