@@ -49,14 +49,20 @@ fn main() {
                 let name = match sub_m.get_one::<String>("name") {
                     Some(name) => name,
                     None => {
-                        eprintln!("{} Repository name is required in non-interactive mode", "ERROR:".red());
+                        eprintln!(
+                            "{} Repository name is required in non-interactive mode",
+                            "ERROR:".red()
+                        );
                         return;
                     }
                 };
                 let path = match sub_m.get_one::<String>("path") {
                     Some(path) => path,
                     None => {
-                        eprintln!("{} Repository path is required in non-interactive mode", "ERROR:".red());
+                        eprintln!(
+                            "{} Repository path is required in non-interactive mode",
+                            "ERROR:".red()
+                        );
                         return;
                     }
                 };

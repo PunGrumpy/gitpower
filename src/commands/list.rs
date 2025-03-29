@@ -1,5 +1,5 @@
-use colored::*;
 use crate::config::Config;
+use colored::*;
 
 pub fn list_repositories(config: &Config) {
     println!("{}", "Configured Repositories:".green().bold());
@@ -38,4 +38,4 @@ pub fn list_repositories(config: &Config) {
             println!("    Repos: {}", group.repositories.join(", "));
         }
     }
-} 
+}

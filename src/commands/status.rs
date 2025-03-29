@@ -1,6 +1,6 @@
-use colored::*;
 use crate::config::{Config, get_repositories_by_names};
 use crate::git::run_git_command;
+use colored::*;
 
 pub fn show_repository_status(config: &Config, names: &[&str]) {
     let repos = get_repositories_by_names(config, names);
@@ -110,4 +110,4 @@ pub fn show_repository_status(config: &Config, names: &[&str]) {
             }
         }
     }
-} 
+}

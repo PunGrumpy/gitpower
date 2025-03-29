@@ -1,5 +1,5 @@
 use clap::{Arg, Command};
-use clap_complete::{generate,  Shell};
+use clap_complete::{Shell, generate};
 
 pub fn build_cli() -> Command {
     Command::new("GitPower")

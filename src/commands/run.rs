@@ -1,6 +1,6 @@
+use crate::config::{Config, get_repositories_by_names};
 use colored::*;
 use std::process::Command as ProcessCommand;
-use crate::config::{Config, get_repositories_by_names};
 
 pub fn run_command(config: &Config, command: &str, names: &[&str]) {
     let repos = get_repositories_by_names(config, names);
@@ -71,4 +71,4 @@ pub fn run_command(config: &Config, command: &str, names: &[&str]) {
     }
 
     println!("\n{}", "Command execution complete!".green().bold());
-} 
+}

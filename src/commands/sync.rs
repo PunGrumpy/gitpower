@@ -1,6 +1,6 @@
-use colored::*;
 use crate::config::{Config, get_repositories_by_names};
 use crate::git::{run_git_command, run_git_command_with_output};
+use colored::*;
 
 pub fn sync_repositories(config: &Config, names: &[&str]) {
     let repos = get_repositories_by_names(config, names);
@@ -100,4 +100,4 @@ pub fn pull_repositories(config: &Config, names: &[&str]) {
     }
 
     println!("\n{}", "Pull complete!".green().bold());
-} 
+}

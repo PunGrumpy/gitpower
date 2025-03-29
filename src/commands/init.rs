@@ -1,15 +1,20 @@
 use colored::*;
-use std::path::Path;
+use dialoguer::{Confirm, Input, theme::ColorfulTheme};
 use std::fs;
-use dialoguer::{theme::ColorfulTheme, Input, Confirm};
+use std::path::Path;
 
-use crate::config::{Config, Repository, Group};
+use crate::config::{Config, Group, Repository};
 use crate::git::run_git_command_with_output;
 
 pub fn init_repository_interactive(config: &mut Config) {
     let theme = ColorfulTheme::default();
 
-    println!("\n{}", "🚀 Welcome to GitPower Repository Initialization!".green().bold());
+    println!(
+        "\n{}",
+        "🚀 Welcome to GitPower Repository Initialization!"
+            .green()
+            .bold()
+    );
     println!("This will help you set up a new repository or add an existing one.\n");
 
     // Repository Name
@@ -22,7 +27,11 @@ pub fn init_repository_interactive(config: &mut Config) {
 
         if !input.is_empty() {
             if config.repositories.iter().any(|r| r.name == input) {
-                println!("{} Repository '{}' already exists in config", "ERROR:".red().bold(), input);
+                println!(
+                    "{} Repository '{}' already exists in config",
+                    "ERROR:".red().bold(),
+                    input
+                );
                 continue;
             }
             break input;
@@ -97,25 +106,47 @@ pub fn init_repository_interactive(config: &mut Config) {
 
     // Initialize the repository
     println!("\n{}", "Initializing repository...".cyan().bold());
-    init_repository(config, &name, &path, remote.as_deref(), branch.as_deref(), groups.as_deref());
+    init_repository(
+        config,
+        &name,
+        &path,
+        remote.as_deref(),
+        branch.as_deref(),
+        groups.as_deref(),
+    );
 
     println!("\n{}", "✨ Repository setup complete!".green().bold());
 }
 
-pub fn init_repository(config: &mut Config, name: &str, path: &str, remote: Option<&str>, branch: Option<&str>, groups: Option<&str>) {
+pub fn init_repository(
+    config: &mut Config,
+    name: &str,
+    path: &str,
+    remote: Option<&str>,
+    branch: Option<&str>,
+    groups: Option<&str>,
+) {
     let expanded_path = shellexpand::tilde(path);
     let repo_path = Path::new(expanded_path.as_ref());
 
     // Check if repository already exists in config
     if config.repositories.iter().any(|r| r.name == name) {
-        println!("{} Repository '{}' already exists in config", "ERROR:".red().bold(), name);
+        println!(
+            "{} Repository '{}' already exists in config",
+            "ERROR:".red().bold(),
+            name
+        );
         return;
     }
 
     // Create repository directory if it doesn't exist
     if !repo_path.exists() {
         if let Err(e) = fs::create_dir_all(repo_path) {
-            println!("{} Failed to create repository directory: {}", "ERROR:".red().bold(), e);
+            println!(
+                "{} Failed to create repository directory: {}",
+                "ERROR:".red().bold(),
+                e
+            );
             return;
         }
         println!("Created repository directory at {}", repo_path.display());
@@ -124,7 +155,10 @@ pub fn init_repository(config: &mut Config, name: &str, path: &str, remote: Opti
     // Initialize git repository if it doesn't exist
     if !repo_path.join(".git").exists() {
         if !run_git_command_with_output(repo_path, &["init"]) {
-            println!("{} Failed to initialize git repository", "ERROR:".red().bold());
+            println!(
+                "{} Failed to initialize git repository",
+                "ERROR:".red().bold()
+            );
             return;
         }
         println!("Initialized git repository");
@@ -150,7 +184,10 @@ pub fn init_repository(config: &mut Config, name: &str, path: &str, remote: Opti
 
     // Handle groups
     if let Some(groups_str) = groups {
-        let group_names: Vec<String> = groups_str.split(',').map(|s| s.trim().to_string()).collect();
+        let group_names: Vec<String> = groups_str
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .collect();
         new_repo.groups = Some(group_names.clone());
 
         // Create or update groups
@@ -177,5 +214,9 @@ pub fn init_repository(config: &mut Config, name: &str, path: &str, remote: Opti
 
     // Add repository to config
     config.repositories.push(new_repo);
-    println!("{} Added repository '{}' to config", "SUCCESS:".green().bold(), name);
-} 
+    println!(
+        "{} Added repository '{}' to config",
+        "SUCCESS:".green().bold(),
+        name
+    );
+}
