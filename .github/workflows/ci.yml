@@ -58,6 +58,7 @@ jobs:
           manifest-file: ${{ steps.release-please-config.outputs.manifest-file }}
           skip-github-release: true # We're using goreleaser for that
       - name: 🛎️ Checkout Code
+        if: ${{ steps.release-please.outputs.release_created }}
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.release-please.outputs.tag_name }}
