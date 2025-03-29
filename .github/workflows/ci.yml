@@ -1,13 +1,12 @@
-name: 🛠️ CI (Release)
+name: 🫸🏻 CI
 
 on:
-  workflow_run:
-    workflows:
-      - '🫸🏻 CI (Push)'
+  push:
     branches:
       - main
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,10 +16,26 @@ jobs:
   lint:
     name: 🕵🏻 Lint Workflow
     uses: ./.github/workflows/_lint.yml
+  goreleaser-snapshot:
+    name: 📸 Goreleaser Snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 🐀 Install Go
+        uses: actions/setup-go@v5
+      - name: 🦾 Build GitPower
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          args: build --snapshot --clean --verbose
   release:
     name: 🚀 Release
+    needs:
+      - lint
+      - goreleaser-snapshot
     runs-on: ubuntu-latest
-    needs: lint
     steps:
       - name: ⚙️ Release Please Config
         id: release-please-config
@@ -41,6 +56,11 @@ jobs:
           config-file: ${{ steps.release-please-config.outputs.config-file }}
           release-type: ${{ steps.release-please-config.outputs.release-type }}
           manifest-file: ${{ steps.release-please-config.outputs.manifest-file }}
+          skip-github-release: true # We're using goreleaser for that
+      - name: 🛎️ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release-please.outputs.tag_name }}
       - name: 🦾 Build GitPower
         if: ${{ steps.release-please.outputs.release_created }}
         uses: goreleaser/goreleaser-action@v6
