@@ -81,12 +81,11 @@ impl App {
     fn ui(&mut self, f: &mut ratatui::Frame) {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
-            .margin(1)
             .constraints(
                 [
                     Constraint::Length(3),  // Title
-                    Constraint::Min(0),     // Repository List
-                    Constraint::Length(5),  // Status Text (increased height)
+                    Constraint::Min(10),    // Repository List
+                    Constraint::Length(6),  // Status Text
                     Constraint::Length(3),  // Status Bar
                 ]
                 .as_ref(),
@@ -94,15 +93,16 @@ impl App {
             .split(f.area());
 
         // Title
-        let title = Paragraph::new(vec![Line::from(vec![
+        let title = Paragraph::new(Line::from(vec![
             Span::styled(
-                " GitPower Interactive Mode ",
+                "GitPower Interactive Mode",
                 Style::default()
                     .fg(Color::White)
                     .bg(Color::Blue)
                     .add_modifier(Modifier::BOLD),
             ),
-        ])])
+        ]))
+        .alignment(ratatui::layout::Alignment::Center)
         .block(Block::default().borders(Borders::ALL));
         f.render_widget(title, chunks[0]);
 
@@ -112,43 +112,70 @@ impl App {
             .iter()
             .enumerate()
             .map(|(i, repo)| {
-                let content = vec![Line::from(vec![
+                let style = if i == self.selected_index {
+                    Style::default()
+                        .fg(Color::White)
+                        .add_modifier(Modifier::REVERSED)
+                } else {
+                    Style::default().fg(Color::White)
+                };
+                
+                ListItem::new(Line::from(vec![
                     Span::styled(
-                        format!("{} {}", if i == self.selected_index { ">" } else { " " }, repo),
-                        Style::default().add_modifier(if i == self.selected_index {
-                            Modifier::REVERSED
-                        } else {
-                            Modifier::empty()
-                        }),
+                        format!(" {} ", repo),
+                        style,
                     ),
-                ])];
-                ListItem::new(content)
+                ]))
             })
             .collect();
 
         let repos = List::new(items)
-            .block(Block::default().borders(Borders::ALL).title("Repositories"))
-            .highlight_style(Style::default().add_modifier(Modifier::REVERSED));
+            .block(Block::default()
+                .borders(Borders::ALL)
+                .title("Repositories"));
         f.render_stateful_widget(repos, chunks[1], &mut self.list_state);
 
-        // Status Text
+        // Status Text (keep the colored status text)
         let status_lines: Vec<Line> = self.status_text
             .split('\n')
-            .map(|line| Line::from(vec![
-                Span::styled(line, Style::default().fg(Color::Yellow))
-            ]))
+            .map(|line| {
+                if line.starts_with("Repository:") {
+                    Line::from(vec![
+                        Span::styled("Repository: ", Style::default().fg(Color::Green)),
+                        Span::styled(line.strip_prefix("Repository: ").unwrap_or(line), Style::default().fg(Color::White)),
+                    ])
+                } else if line.starts_with("Branch:") {
+                    Line::from(vec![
+                        Span::styled("Branch: ", Style::default().fg(Color::Yellow)),
+                        Span::styled(line.strip_prefix("Branch: ").unwrap_or(line), Style::default().fg(Color::White)),
+                    ])
+                } else if line.starts_with("Remote:") {
+                    Line::from(vec![
+                        Span::styled("Remote: ", Style::default().fg(Color::Blue)),
+                        Span::styled(line.strip_prefix("Remote: ").unwrap_or(line), Style::default().fg(Color::White)),
+                    ])
+                } else {
+                    Line::from(vec![Span::styled(line, Style::default().fg(Color::White))])
+                }
+            })
             .collect();
+
         let status_text = Paragraph::new(status_lines)
-            .block(Block::default().borders(Borders::ALL).title("Status"));
+            .block(Block::default()
+                .borders(Borders::ALL)
+                .title("Status"));
         f.render_widget(status_text, chunks[2]);
 
         // Status Bar
-        let status = Paragraph::new(vec![Line::from(vec![
+        let status = Paragraph::new(Line::from(vec![
             Span::styled(
-                " ↑↓: Navigate | Enter: Select | q: Quit ",
-                Style::default().fg(Color::White).bg(Color::Blue),
+                "↑↓: Navigate | Enter: Select | q: Quit",
+                Style::default()
+                    .fg(Color::White)
+                    .bg(Color::Blue),
             ),
-        ])])
+        ]))
+        .alignment(ratatui::layout::Alignment::Center)
         .block(Block::default().borders(Borders::ALL));
         f.render_widget(status, chunks[3]);
     }
