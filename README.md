@@ -81,71 +81,34 @@ groups:
 
 ## 📚 Usage
 
-### Initialize a New Repository
+### Basic Commands
 
-```
-gitpower init my-repo ~/projects/my-repo
-```
+| Command         | Description                                             |
+| --------------- | ------------------------------------------------------- |
+| `gitpower init` | Start interactive dialog to initialize a new repository |
+| `gitpower list` | List configured repositories                            |
+| `gitpower sync` | Sync all repositories                                   |
+| `gitpower pull` | Pull changes from all repositories                      |
 
-Initialize with remote and branch:
+### Sync Commands
 
-```
-gitpower init my-repo ~/projects/my-repo --remote https://github.com/user/my-repo.git --branch main
-```
+| Command                            | Description                |
+| ---------------------------------- | -------------------------- |
+| `gitpower sync project-a dotfiles` | Sync specific repositories |
+| `gitpower sync work personal`      | Sync repositories by group |
 
-Initialize with groups:
+### Run Commands
 
-```
-gitpower init my-repo ~/projects/my-repo --groups work,personal
-```
+| Command                                   | Description                                    |
+| ----------------------------------------- | ---------------------------------------------- |
+| `gitpower run "git status"`               | Run command in all repositories                |
+| `gitpower run "npm install" web-projects` | Run command in specific repositories or groups |
 
-### List Configured Repositories
+### Configuration
 
-```
-gitpower list
-```
-
-### Sync All Repositories
-
-```
-gitpower sync
-```
-
-### Sync Specific Repositories
-
-```
-gitpower sync project-a dotfiles
-```
-
-### Sync Repositories by Group
-
-```
-gitpower sync work personal
-```
-
-### Pull Changes from All Repositories
-
-```
-gitpower pull
-```
-
-### Run Commands in All Repositories
-
-```
-gitpower run "git status"
-```
-
-### Run Commands in Specific Repositories or Groups
-
-```
-gitpower run "npm install" web-projects
-```
-
-### Use Custom Configuration File
-
-```
-gitpower --config ~/my-custom-config.yml list
-```
+| Command                                         | Description                   |
+| ----------------------------------------------- | ----------------------------- |
+| `gitpower --config ~/my-custom-config.yml list` | Use custom configuration file |
 
 ## 🔍 Advanced Usage
 
