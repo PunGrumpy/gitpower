@@ -14,9 +14,23 @@ pub struct Config {
 pub struct Repository {
     pub name: String,
     pub path: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub remote: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub branch: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub groups: Option<Vec<String>>,
+}
+
+impl Repository {
+    pub fn validate(&self) -> Result<(), String> {
+        if let Some(remote) = &self.remote {
+            if !remote.starts_with("http://") && !remote.starts_with("https://") && !remote.starts_with("git@") {
+                return Err(format!("Invalid remote URL format: {}", remote));
+            }
+        }
+        Ok(())
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -96,8 +110,8 @@ pub fn get_repositories_by_names<'a>(config: &'a Config, names: &[&str]) -> Vec<
     }
 
     let mut result = Vec::new();
-    let binding = Vec::new();
-    let groups = config.groups.as_ref().unwrap_or(&binding);
+    let empty_groups = Vec::new();
+    let groups = config.groups.as_ref().unwrap_or(&empty_groups);
 
     for name in names {
         // Check if name is a group
@@ -114,6 +128,9 @@ pub fn get_repositories_by_names<'a>(config: &'a Config, names: &[&str]) -> Vec<
                     if !result.contains(&repo) {
                         result.push(repo);
                     }
+                } else {
+                    eprintln!("{}: Repository '{}' in group '{}' not found", 
+                        "Warning".yellow(), repo_name, name);
                 }
             }
         } else {
@@ -123,9 +140,15 @@ pub fn get_repositories_by_names<'a>(config: &'a Config, names: &[&str]) -> Vec<
                     result.push(repo);
                 }
             } else {
-                eprintln!("Repository or group not found: {}", name);
+                eprintln!("{}: Repository or group '{}' not found", 
+                    "Warning".yellow(), name);
             }
         }
+    }
+
+    if result.is_empty() {
+        eprintln!("{}: No valid repositories found for the specified names", 
+            "Warning".yellow());
     }
 
     result

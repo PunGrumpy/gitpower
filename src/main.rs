@@ -6,6 +6,7 @@ mod git;
 use colored::Colorize;
 use std::fs;
 use std::path::Path;
+use config::Repository;
 
 fn main() {
     let cli = cli::build_cli();
@@ -50,7 +51,7 @@ fn main() {
                     Some(name) => name,
                     None => {
                         eprintln!(
-                            "{} Repository name is required in non-interactive mode",
+                            "{} Repository name is required in non-interactive mode. Use --name <name>",
                             "ERROR:".red()
                         );
                         return;
@@ -60,15 +61,46 @@ fn main() {
                     Some(path) => path,
                     None => {
                         eprintln!(
-                            "{} Repository path is required in non-interactive mode",
+                            "{} Repository path is required in non-interactive mode. Use --path <path>",
                             "ERROR:".red()
                         );
                         return;
                     }
                 };
+
+                // Validate repository path
+                let expanded_path = shellexpand::tilde(path);
+                let repo_path = Path::new(expanded_path.as_ref());
+                
+                if !repo_path.exists() {
+                    if let Err(e) = fs::create_dir_all(repo_path) {
+                        eprintln!(
+                            "{} Failed to create repository directory '{}': {}",
+                            "ERROR:".red(),
+                            repo_path.display(),
+                            e
+                        );
+                        return;
+                    }
+                }
+
                 let remote = sub_m.get_one::<String>("remote").map(|s| s.as_str());
                 let branch = sub_m.get_one::<String>("branch").map(|s| s.as_str());
                 let groups = sub_m.get_one::<String>("groups").map(|s| s.as_str());
+
+                // Create repository and validate it
+                let repo = Repository {
+                    name: name.clone(),
+                    path: path.clone(),
+                    remote: remote.map(|s| s.to_string()),
+                    branch: branch.map(|s| s.to_string()),
+                    groups: groups.map(|s| s.split(',').map(|s| s.trim().to_string()).collect()),
+                };
+
+                if let Err(e) = repo.validate() {
+                    eprintln!("{} {}", "ERROR:".red(), e);
+                    return;
+                }
 
                 commands::init_repository(&mut config, name, path, remote, branch, groups);
             } else {
