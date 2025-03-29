@@ -12,10 +12,10 @@ A powerful CLI tool for managing multiple Git repositories simultaneously, devel
 - **Group repositories** for easier management 📁
 - **Configure via YAML** for simple setup ⚙️
 - **Initialize new repositories** with a single command 🆕
+- **Completion for shell** (bash, zsh, fish) 🐚
 
 ## 🎯 To-Do
 
-- [ ] Completion for shell
 - [ ] Interactive mode (like LazyGit)
 
 ## 📦 Installation

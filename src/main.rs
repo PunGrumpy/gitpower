@@ -8,7 +8,21 @@ use std::fs;
 use std::path::Path;
 
 fn main() {
-    let matches = cli::build_cli().get_matches();
+    let cli = cli::build_cli();
+    let matches = cli.clone().get_matches();
+
+    // Handle completion command first
+    if let Some(("completion", sub_m)) = matches.subcommand() {
+        let shell = sub_m.get_one::<String>("shell").unwrap();
+        match shell.as_str() {
+            "bash" => cli::print_completion(clap_complete::Shell::Bash),
+            "zsh" => cli::print_completion(clap_complete::Shell::Zsh),
+            "fish" => cli::print_completion(clap_complete::Shell::Fish),
+            "powershell" => cli::print_completion(clap_complete::Shell::PowerShell),
+            _ => unreachable!(),
+        }
+        return;
+    }
 
     let config_path = matches
         .get_one::<String>("config")

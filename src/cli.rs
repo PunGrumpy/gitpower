@@ -1,4 +1,5 @@
 use clap::{Arg, Command};
+use clap_complete::{generate,  Shell};
 
 pub fn build_cli() -> Command {
     Command::new("GitPower")
@@ -84,4 +85,20 @@ pub fn build_cli() -> Command {
                         .action(clap::ArgAction::Append),
                 ),
         )
+        .subcommand(
+            Command::new("completion")
+                .about("Generate shell completion")
+                .arg(
+                    Arg::new("shell")
+                        .help("Shell to generate completion for")
+                        .value_parser(["bash", "zsh", "fish", "powershell"])
+                        .required(true),
+                ),
+        )
+}
+
+pub fn print_completion(shell: Shell) {
+    let mut cmd = build_cli();
+    let name = cmd.get_name().to_string();
+    generate(shell, &mut cmd, name, &mut std::io::stdout());
 }
