@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/PunGrumpy/gitpower/compare/v1.2.0...v1.2.1) (2025-03-29)
+
+
+### Bug Fixes
+
+* **ci:** consolidate CI workflows by removing push.yml and integrating its functionality into ci.yml ([c4cceac](https://github.com/PunGrumpy/gitpower/commit/c4cceac7556882e4b3b23951b4c82f3d6a06e27f))
+
 ## [1.2.0](https://github.com/PunGrumpy/gitpower/compare/v1.1.0...v1.2.0) (2025-03-29)
 
 
