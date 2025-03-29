@@ -11,10 +11,10 @@ A powerful CLI tool for managing multiple Git repositories simultaneously, devel
 - **Run commands** across multiple repositories 💻
 - **Group repositories** for easier management 📁
 - **Configure via YAML** for simple setup ⚙️
+- **Initialize new repositories** with a single command 🆕
 
 ## 🎯 To-Do
 
-- [ ] Initialize new repositories
 - [ ] Completion for shell
 - [ ] Interactive mode (like LazyGit)
 
@@ -80,6 +80,24 @@ groups:
 ```
 
 ## 📚 Usage
+
+### Initialize a New Repository
+
+```
+gitpower init my-repo ~/projects/my-repo
+```
+
+Initialize with remote and branch:
+
+```
+gitpower init my-repo ~/projects/my-repo --remote https://github.com/user/my-repo.git --branch main
+```
+
+Initialize with groups:
+
+```
+gitpower init my-repo ~/projects/my-repo --groups work,personal
+```
 
 ### List Configured Repositories
 

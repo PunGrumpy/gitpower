@@ -14,6 +14,42 @@ pub fn build_cli() -> Command {
         )
         .subcommand(Command::new("list").about("List all configured repositories"))
         .subcommand(
+            Command::new("init")
+                .about("Initialize a new repository or add existing repository to config")
+                .arg(
+                    Arg::new("name")
+                        .help("Name of the repository")
+                        .required(false),
+                )
+                .arg(
+                    Arg::new("path")
+                        .help("Path to the repository")
+                        .required(false),
+                )
+                .arg(
+                    Arg::new("remote")
+                        .help("Remote URL (optional)")
+                        .long("remote"),
+                )
+                .arg(
+                    Arg::new("branch")
+                        .help("Default branch (optional)")
+                        .long("branch"),
+                )
+                .arg(
+                    Arg::new("groups")
+                        .help("Groups to add the repository to (comma-separated)")
+                        .long("groups"),
+                )
+                .arg(
+                    Arg::new("non-interactive")
+                        .help("Run in non-interactive mode")
+                        .long("non-interactive")
+                        .short('n')
+                        .action(clap::ArgAction::SetTrue),
+                ),
+        )
+        .subcommand(
             Command::new("status")
                 .about("Show status of all repositories")
                 .arg(
