@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
 
 jobs:
   release:
@@ -14,8 +13,7 @@ jobs:
       - name: 🛎️ Checkout Code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
+          ref: ${{ github.ref }}
       - name: 🐀 Install Go
         uses: actions/setup-go@v5
       - name: 🦾 Build GitPower
