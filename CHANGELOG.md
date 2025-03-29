@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/PunGrumpy/gitpower/compare/v1.2.1...v1.3.0) (2025-03-29)
+
+
+### Features
+
+* **ci:** integrate semantic-release for automated versioning and changelog generation ([6fc5011](https://github.com/PunGrumpy/gitpower/commit/6fc50113610f3343b1a489f78c467454ccf06654))
+
 # Changelog
 
 ## [1.2.1](https://github.com/PunGrumpy/gitpower/compare/v1.2.0...v1.2.1) (2025-03-29)
