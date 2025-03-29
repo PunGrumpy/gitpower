@@ -1,0 +1,26 @@
+name: 🚀 Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: 🚀 Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: 🐀 Install Go
+        uses: actions/setup-go@v5
+      - name: 🦾 Build GitPower
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          args: release --clean --verbose
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
