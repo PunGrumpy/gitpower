@@ -86,6 +86,11 @@ pub fn build_cli() -> Command {
                 ),
         )
         .subcommand(
+            Command::new("interactive")
+                .about("Launch interactive mode (like LazyGit)")
+                .alias("i"),
+        )
+        .subcommand(
             Command::new("completion")
                 .about("Generate shell completion")
                 .arg(

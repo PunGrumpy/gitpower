@@ -117,6 +117,12 @@ fn main() {
             };
             commands::run_command(&config, command, &repo_names);
         }
+        Some(("interactive", _)) => {
+            let mut app = commands::App::new(config);
+            if let Err(e) = app.run() {
+                eprintln!("{}: {}", "Error in interactive mode".red(), e);
+            }
+        }
         _ => {
             println!("No command specified. Try 'gitpower --help' for more information.");
         }

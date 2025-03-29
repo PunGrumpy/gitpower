@@ -15,6 +15,9 @@ serde_yaml = "0.9.34"
 shellexpand = "3.1.0"
 clap_complete = "4.0"
 dialoguer = "0.11.0"
+crossterm = "0.28.1"
+ratatui = "0.29.0"
+anyhow = "1.0.97"
 
 [profile.release]
 opt-level = 3

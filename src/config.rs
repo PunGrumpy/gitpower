@@ -4,13 +4,13 @@ use std::error::Error;
 use std::fs;
 use std::path::Path;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Config {
     pub repositories: Vec<Repository>,
     pub groups: Option<Vec<Group>>,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Repository {
     pub name: String,
     pub path: String,
@@ -19,7 +19,7 @@ pub struct Repository {
     pub groups: Option<Vec<String>>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Group {
     pub name: String,
     pub repositories: Vec<String>,
