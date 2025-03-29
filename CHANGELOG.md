@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/PunGrumpy/gitpower/compare/v1.1.0...v1.2.0) (2025-03-29)
+
+
+### Features
+
+* **interactive:** implement interactive mode for repository management with terminal UI ([588f630](https://github.com/PunGrumpy/gitpower/commit/588f63016403eab1b6470023a3e33c7a2efab977))
+
 ## [1.1.0](https://github.com/PunGrumpy/gitpower/compare/v1.0.2...v1.1.0) (2025-03-29)
 
 
