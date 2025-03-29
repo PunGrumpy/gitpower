@@ -31,13 +31,21 @@ pub fn load_config(config_path: &str) -> Result<Config, Box<dyn Error>> {
             Ok(config) => Ok(config),
             Err(e) => {
                 eprintln!("{}: {}", "Error parsing config".red(), e);
+                create_default_config(config_path);
                 Err(Box::new(e))
             }
         },
         Err(e) => {
-            eprintln!("{}: {}", "Error reading config".red(), e);
+            eprintln!("{}: {}", "Config file not found, creating default config".yellow(), e);
             create_default_config(config_path);
-            Err(Box::new(e))
+            // Try to load the newly created config
+            match fs::read_to_string(config_path) {
+                Ok(content) => match serde_yaml::from_str::<Config>(&content) {
+                    Ok(config) => Ok(config),
+                    Err(e) => Err(Box::new(e))
+                },
+                Err(e) => Err(Box::new(e))
+            }
         }
     }
 }
