@@ -2,15 +2,15 @@ use anyhow::Result;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
     execute,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    terminal::{EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode},
 };
 use ratatui::{
+    Terminal,
     backend::CrosstermBackend,
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, List, ListItem, Paragraph, ListState},
-    Terminal,
+    widgets::{Block, Borders, List, ListItem, ListState, Paragraph},
 };
 use std::io;
 use std::path::Path;
@@ -83,25 +83,23 @@ impl App {
             .direction(Direction::Vertical)
             .constraints(
                 [
-                    Constraint::Length(3),  // Title
-                    Constraint::Min(10),    // Repository List
-                    Constraint::Length(6),  // Status Text
-                    Constraint::Length(3),  // Status Bar
+                    Constraint::Length(3), // Title
+                    Constraint::Min(10),   // Repository List
+                    Constraint::Length(6), // Status Text
+                    Constraint::Length(3), // Status Bar
                 ]
                 .as_ref(),
             )
             .split(f.area());
 
         // Title
-        let title = Paragraph::new(Line::from(vec![
-            Span::styled(
-                "GitPower Interactive Mode",
-                Style::default()
-                    .fg(Color::White)
-                    .bg(Color::Blue)
-                    .add_modifier(Modifier::BOLD),
-            ),
-        ]))
+        let title = Paragraph::new(Line::from(vec![Span::styled(
+            "GitPower Interactive Mode",
+            Style::default()
+                .fg(Color::White)
+                .bg(Color::Blue)
+                .add_modifier(Modifier::BOLD),
+        )]))
         .alignment(ratatui::layout::Alignment::Center)
         .block(Block::default().borders(Borders::ALL));
         f.render_widget(title, chunks[0]);
@@ -119,40 +117,43 @@ impl App {
                 } else {
                     Style::default().fg(Color::White)
                 };
-                
-                ListItem::new(Line::from(vec![
-                    Span::styled(
-                        format!(" {} ", repo),
-                        style,
-                    ),
-                ]))
+
+                ListItem::new(Line::from(vec![Span::styled(format!(" {} ", repo), style)]))
             })
             .collect();
 
-        let repos = List::new(items)
-            .block(Block::default()
-                .borders(Borders::ALL)
-                .title("Repositories"));
+        let repos =
+            List::new(items).block(Block::default().borders(Borders::ALL).title("Repositories"));
         f.render_stateful_widget(repos, chunks[1], &mut self.list_state);
 
         // Status Text (keep the colored status text)
-        let status_lines: Vec<Line> = self.status_text
+        let status_lines: Vec<Line> = self
+            .status_text
             .split('\n')
             .map(|line| {
                 if line.starts_with("Repository:") {
                     Line::from(vec![
                         Span::styled("Repository: ", Style::default().fg(Color::Green)),
-                        Span::styled(line.strip_prefix("Repository: ").unwrap_or(line), Style::default().fg(Color::White)),
+                        Span::styled(
+                            line.strip_prefix("Repository: ").unwrap_or(line),
+                            Style::default().fg(Color::White),
+                        ),
                     ])
                 } else if line.starts_with("Branch:") {
                     Line::from(vec![
                         Span::styled("Branch: ", Style::default().fg(Color::Yellow)),
-                        Span::styled(line.strip_prefix("Branch: ").unwrap_or(line), Style::default().fg(Color::White)),
+                        Span::styled(
+                            line.strip_prefix("Branch: ").unwrap_or(line),
+                            Style::default().fg(Color::White),
+                        ),
                     ])
                 } else if line.starts_with("Remote:") {
                     Line::from(vec![
                         Span::styled("Remote: ", Style::default().fg(Color::Blue)),
-                        Span::styled(line.strip_prefix("Remote: ").unwrap_or(line), Style::default().fg(Color::White)),
+                        Span::styled(
+                            line.strip_prefix("Remote: ").unwrap_or(line),
+                            Style::default().fg(Color::White),
+                        ),
                     ])
                 } else {
                     Line::from(vec![Span::styled(line, Style::default().fg(Color::White))])
@@ -161,20 +162,14 @@ impl App {
             .collect();
 
         let status_text = Paragraph::new(status_lines)
-            .block(Block::default()
-                .borders(Borders::ALL)
-                .title("Status"));
+            .block(Block::default().borders(Borders::ALL).title("Status"));
         f.render_widget(status_text, chunks[2]);
 
         // Status Bar
-        let status = Paragraph::new(Line::from(vec![
-            Span::styled(
-                "↑↓: Navigate | Enter: Select | q: Quit",
-                Style::default()
-                    .fg(Color::White)
-                    .bg(Color::Blue),
-            ),
-        ]))
+        let status = Paragraph::new(Line::from(vec![Span::styled(
+            "↑↓: Navigate | Enter: Select | q: Quit",
+            Style::default().fg(Color::White).bg(Color::Blue),
+        )]))
         .alignment(ratatui::layout::Alignment::Center)
         .block(Block::default().borders(Borders::ALL));
         f.render_widget(status, chunks[3]);
@@ -209,7 +204,12 @@ impl App {
 
     fn show_repository_status(&mut self, index: usize) {
         let repo_name = &self.repositories[index];
-        let repo = self.config.repositories.iter().find(|r| r.name == *repo_name).unwrap();
+        let repo = self
+            .config
+            .repositories
+            .iter()
+            .find(|r| r.name == *repo_name)
+            .unwrap();
         let path = shellexpand::tilde(&repo.path);
         let repo_path = Path::new(path.as_ref());
 
@@ -220,7 +220,9 @@ impl App {
 
         // Get current branch
         let branch_output = run_git_command(repo_path, &["branch", "--show-current"]);
-        let current_branch = String::from_utf8_lossy(&branch_output.stdout).trim().to_string();
+        let current_branch = String::from_utf8_lossy(&branch_output.stdout)
+            .trim()
+            .to_string();
 
         // Get status
         let status_output = run_git_command(repo_path, &["status", "--porcelain"]);
@@ -240,4 +242,4 @@ impl App {
             remote_url
         );
     }
-} 
+}
