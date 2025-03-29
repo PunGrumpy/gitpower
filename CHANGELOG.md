@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/PunGrumpy/gitpower/compare/v1.3.0...v1.3.1) (2025-03-29)
+
+
+### Bug Fixes
+
+* **ci:** rename and restructure CI jobs for clarity and improved tagging process ([69115aa](https://github.com/PunGrumpy/gitpower/commit/69115aa2a60c68cbec60314ee801fb12aaec77a0))
+
 # [1.3.0](https://github.com/PunGrumpy/gitpower/compare/v1.2.1...v1.3.0) (2025-03-29)
 
 
