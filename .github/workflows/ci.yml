@@ -16,8 +16,10 @@ jobs:
   lint:
     name: 🕵🏻 Lint Workflow
     uses: ./.github/workflows/_lint.yml
+
   goreleaser-snapshot:
     name: 📸 Goreleaser Snapshot
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: 🛎️ Checkout Code
@@ -30,44 +32,36 @@ jobs:
         uses: goreleaser/goreleaser-action@v6
         with:
           args: build --snapshot --clean --verbose
+
   release:
     name: 🚀 Release
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - lint
-      - goreleaser-snapshot
     runs-on: ubuntu-latest
     steps:
-      - name: ⚙️ Release Please Config
-        id: release-please-config
-        run: |
-          if [ -f .github/release-please-config.json ]; then
-              echo "config-file=.github/release-please-config.json" >> $GITHUB_OUTPUT
-              [ -f .github/release-please-manifest.json ] &&
-              echo "manifest-file=.github/release-please-manifest.json" >> $GITHUB_OUTPUT
-              [ -f .github/.release-please-manifest.json ] &&
-              echo "manifest-file=.github/.release-please-manifest.json" >> $GITHUB_OUTPUT
-          else
-              echo "release-type=rust" >> $GITHUB_OUTPUT
-          fi
-      - name: 🙏 Release Please
-        id: release-please
-        uses: googleapis/release-please-action@v4
-        with:
-          config-file: ${{ steps.release-please-config.outputs.config-file }}
-          release-type: ${{ steps.release-please-config.outputs.release-type }}
-          manifest-file: ${{ steps.release-please-config.outputs.manifest-file }}
-          skip-github-release: true # We're using goreleaser for that
       - name: 🛎️ Checkout Code
-        if: ${{ steps.release-please.outputs.tag_name != '' }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.release-please.outputs.tag_name }}
+          fetch-depth: 0
+      - name: 🐀 Install Go
+        uses: actions/setup-go@v5
+      - name: 🐀 Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: 📦 Install semantic-release
+        run: npm install -g semantic-release @semantic-release/git @semantic-release/github @semantic-release/changelog
+      - name: 🏷️ Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release
       - name: 🦾 Build GitPower
-        if: ${{ steps.release-please.outputs.tag_name != '' }}
+        if: ${{ github.ref_name != 'main' }}
         uses: goreleaser/goreleaser-action@v6
         with:
           args: release --clean --verbose
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
-          TAG: ${{ steps.release-please.outputs.tag_name }}
+          TAG: ${{ github.ref_name }}
