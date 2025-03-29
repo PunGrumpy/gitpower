@@ -80,14 +80,14 @@ groups:
 
 ### Basic Commands
 
-| Command               | Description                                             |
-| --------------------- | ------------------------------------------------------- |
-| `gitpower init`       | Start interactive dialog to initialize a new repository |
-| `gitpower list`       | List configured repositories                            |
-| `gitpower sync`       | Sync all repositories                                   |
-| `gitpower pull`       | Pull changes from all repositories                      |
-| `gitpower interactive | Start interactive mode                                  |
-| `gitpower help`       | Show help message                                       |
+| Command                | Description                                             |
+| ---------------------- | ------------------------------------------------------- |
+| `gitpower init`        | Start interactive dialog to initialize a new repository |
+| `gitpower list`        | List configured repositories                            |
+| `gitpower sync`        | Sync all repositories                                   |
+| `gitpower pull`        | Pull changes from all repositories                      |
+| `gitpower interactive` | Start interactive mode                                  |
+| `gitpower help`        | Show help message                                       |
 
 ### Sync Commands
 
